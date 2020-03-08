@@ -50,6 +50,7 @@ public class ImageController {
 
     //Also now you need to add the tags of an image in the Model type object
     //Here a list of tags is added in the Model type object
+    //Here a list of comments is added in the Model type object
     //this list is then sent to 'images/image.html' file and the tags are displayed
     @RequestMapping("/images/{id}")
     public String showImage(@PathVariable("id") Integer id, Model model) {
@@ -92,6 +93,9 @@ public class ImageController {
         return "redirect:/images";
     }
 
+    //This controller method is called when the request pattern is of type '/image/{imageId}/{imageTitle}/comments'
+    //This method fetches the image with the corresponding id from the database and prepares a comment and persists it to the database
+    //Looks for a controller method with request mapping of type '/images/{imageId}'
     @RequestMapping(value = "/image/{imageId}/{imageTitle}/comments", method = RequestMethod.POST)
     public String addComment(@PathVariable("imageId") Integer imageId, @RequestParam("comment") String commentText, Model model, HttpSession httpSession){
         Image image = imageService.getImage(imageId);
@@ -105,7 +109,8 @@ public class ImageController {
     }
 
     //This controller method is called when the request pattern is of type 'editImage'
-    //This method fetches the image with the corresponding id from the database and adds it to the model with the key as 'image'
+    //If the logged in user is the same as the owner of this image then this method fetches the image with the
+    //corresponding id from the database and adds it to the model with the key as 'image'
     //The method then returns 'images/edit.html' file wherein you fill all the updated details of the image
 
     //The method first needs to convert the list of all the tags to a string containing all the tags separated by a comma and then add this string in a Model type object
@@ -166,7 +171,8 @@ public class ImageController {
 
 
     //This controller method is called when the request pattern is of type 'deleteImage' and also the incoming request is of DELETE type
-    //The method calls the deleteImage() method in the business logic passing the id of the image to be deleted
+    //If the logged is user is the same as the user who uploaded the image,then the method deleteImage() in the business logic
+    //is called, and the id of the image to be deleted is passed as an argument
     //Looks for a controller method with request mapping of type '/images'
     @RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
     public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId, Model model,HttpSession httpSession) {
