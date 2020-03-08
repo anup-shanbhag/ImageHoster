@@ -1,8 +1,10 @@
 package ImageHoster.controller;
 
+import ImageHoster.model.Comment;
 import ImageHoster.model.Image;
 import ImageHoster.model.Tag;
 import ImageHoster.model.User;
+import ImageHoster.service.CommentService;
 import ImageHoster.service.ImageService;
 import ImageHoster.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 
 @Controller
@@ -26,6 +29,9 @@ public class ImageController {
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private CommentService commentService;
 
     //This method displays all the images in the user home page after successful login
     @RequestMapping("images")
@@ -50,6 +56,7 @@ public class ImageController {
         Image image = imageService.getImage(id);
         model.addAttribute("image", image);
         model.addAttribute("tags", image.getTags());
+        model.addAttribute("comments", image.getComments());
         return "images/image";
     }
 
@@ -85,6 +92,18 @@ public class ImageController {
         return "redirect:/images";
     }
 
+    @RequestMapping(value = "/image/{imageId}/{imageTitle}/comments", method = RequestMethod.POST)
+    public String addComment(@PathVariable("imageId") Integer imageId, @RequestParam("comment") String commentText, Model model, HttpSession httpSession){
+        Image image = imageService.getImage(imageId);
+        Comment comment = new Comment();
+        comment.setDate(LocalDate.now());
+        comment.setImage(image);
+        comment.setText(commentText);
+        comment.setUser((User)httpSession.getAttribute("loggeduser"));
+        commentService.addComment(comment);
+        return "redirect:/images/"+imageId;
+    }
+
     //This controller method is called when the request pattern is of type 'editImage'
     //This method fetches the image with the corresponding id from the database and adds it to the model with the key as 'image'
     //The method then returns 'images/edit.html' file wherein you fill all the updated details of the image
@@ -104,8 +123,9 @@ public class ImageController {
         }
         else{
             String error = "Only the owner of the image can edit the image";
-            model.addAttribute("editError",error);
             model.addAttribute("tags", image.getTags());
+            model.addAttribute("comments", image.getComments());
+            model.addAttribute("editError",error);
             return "images/image";
         }
     }
@@ -141,7 +161,7 @@ public class ImageController {
         updatedImage.setDate(new Date());
 
         imageService.updateImage(updatedImage);
-        return "redirect:/images/" + updatedImage.getTitle();
+        return "redirect:/images/" + updatedImage.getId();
     }
 
 
@@ -161,6 +181,7 @@ public class ImageController {
             String error = "Only the owner of the image can delete the image";
             model.addAttribute("image", image);
             model.addAttribute("tags", image.getTags());
+            model.addAttribute("comments", image.getComments());
             model.addAttribute("deleteError",error);
             return "images/image";
         }
