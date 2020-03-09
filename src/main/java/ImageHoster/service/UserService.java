@@ -31,22 +31,4 @@ public class UserService {
             return null;
         }
     }
-
-    // This method takes user as a parameter
-    // returns 'true if the user's password meets the minimum  password strength
-    // A password should have at least 1 special character, 1 letter and 1 digit
-    // This method uses three regular expressions to check password strength
-    // hasLetter = check if password has at least 1 letter
-    // hasDigit = check if password has at least 1 digit
-    // hasSpecialChar = check if password has at least 1 special character
-    // Method returns true only if all three regular expressions result in a match
-    public boolean checkPasswordStrength(User user) {
-        String hasLetter = "^.*[a-zA-Z].*$";
-        String hasDigit = "^.*[0-9].*$";
-        // List of special characters used below are from the OWASP standards
-        // Refer: https://owasp.org/www-community/password-special-characters
-        String hasSpecialChar = "^.*[\\ \\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~].*$";
-        return user.getPassword().matches(hasLetter) && user.getPassword().matches(hasDigit) && user.getPassword().matches(hasSpecialChar);
-    }
-
 }

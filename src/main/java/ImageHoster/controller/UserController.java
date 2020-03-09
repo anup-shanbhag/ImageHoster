@@ -41,15 +41,25 @@ public class UserController {
     //This method calls the business logic and after the user record is persisted in the database, directs to login page
     @RequestMapping(value = "users/registration", method = RequestMethod.POST)
     public String registerUser(User user, Model model) {
-        if(userService.checkPasswordStrength(user)){
+        String userPassword = user.getPassword();
+        // Checks using a RegExp if password has at least 1 letter
+        Boolean hasLetter = userPassword.matches("^.*[a-zA-Z].*$");
+        // Checks using a RegExp if password has at least 1 digit
+        Boolean hasDigit = userPassword.matches("^.*[0-9].*$");
+        // Checks using a RegExp if password has at least 1 special character.
+        // List of special characters used below are from the OWASP standards
+        // Refer: https://owasp.org/www-community/password-special-characters
+        Boolean hasSpecialChar = userPassword.matches("^.*[\\ \\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~].*$");
+
+        if(hasLetter & hasDigit & hasSpecialChar){
             userService.registerUser(user);
-            return "redirect:/users/login";
+            return "users/login";
         }
         else{
             user = new User();
             UserProfile profile = new UserProfile();
             user.setProfile(profile);
-            String error = "Password must contain at least 1 alphabet, 1 number & 1 special character";
+            String error = "Password must contain atleast 1 alphabet, 1 number & 1 special character";
             model.addAttribute("User", user);
             model.addAttribute("passwordTypeError",error);
             return "users/registration";
