@@ -1,8 +1,19 @@
 package ImageHoster.model;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 //@Entity annotation specifies that the corresponding class is a JPA entity
 @Entity
@@ -107,5 +118,23 @@ public class User {
 
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
+	}
+
+	// This method overrides the Object.equals() method
+	// returns true if invoking object is the same as object from method params or
+	// if both the objects have the same value for id attribute (not null)
+	// returns false if object from method params is null or not an instance of User
+	// class or id attribute is either null or not the same as the id attribute of
+	// the invoking object
+	@Override
+	public boolean equals(Object obj) {
+		User user;
+		if (obj == null && !(obj instanceof User)) {
+			return Boolean.FALSE;
+		} else if (this == obj || (this.id != null && ((user = (User) obj) != null) && this.id.equals(user.getId()))) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
 	}
 }
