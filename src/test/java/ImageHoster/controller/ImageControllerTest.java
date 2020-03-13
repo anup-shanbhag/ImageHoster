@@ -211,10 +211,10 @@ public class ImageControllerTest {
 		userProfile.setEmailAddress("p@gmail.com");
 		userProfile.setFullName("Prerna");
 		userProfile.setMobileNumber("9876543210");
-		user1.setProfile(userProfile1);
-		user1.setId(2);
-		user1.setUsername("Prerna");
-		user1.setPassword("password1@@");
+		user.setProfile(userProfile1);
+		user.setId(2);
+		user.setUsername("Prerna");
+		user.setPassword("password1@@");
 
 		Image image = new Image();
 		image.setId(1);
@@ -284,10 +284,10 @@ public class ImageControllerTest {
 		userProfile.setEmailAddress("p@gmail.com");
 		userProfile.setFullName("Prerna");
 		userProfile.setMobileNumber("9876543210");
-		user1.setProfile(userProfile1);
-		user1.setId(2);
-		user1.setUsername("Prerna");
-		user1.setPassword("password1@@");
+		user.setProfile(userProfile1);
+		user.setId(2);
+		user.setUsername("Prerna");
+		user.setPassword("password1@@");
 
 		Image image = new Image();
 		image.setId(1);
