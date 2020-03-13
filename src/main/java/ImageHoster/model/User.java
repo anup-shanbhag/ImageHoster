@@ -137,4 +137,30 @@ public class User {
 			return Boolean.FALSE;
 		}
 	}
+
+	// This method users regular expressions to guage the strength of a user's
+	// password
+	// Returns password score
+	public int getPasswordScore() {
+		Integer passwordScore = 0;
+		String userPassword = this.getPassword();
+		// Checks using a RegExp if password has at least 1 letter
+		if (userPassword.matches("^.*[a-zA-Z].*$")) {
+			passwordScore += 1;
+		}
+		// Checks using a RegExp if password has at least 1 digit
+		if (userPassword.matches("^.*[0-9].*$")) {
+			passwordScore += 1;
+		}
+		// Checks using a RegExp if password has at least 1 special character.
+		// List of special characters used below are from the OWASP standards
+		// Refer: https://owasp.org/www-community/password-special-characters
+		if (userPassword.matches(
+				"^.*[\\ \\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~].*$")) {
+			passwordScore += 1;
+		}
+
+		return passwordScore;
+
+	}
 }

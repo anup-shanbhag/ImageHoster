@@ -1,18 +1,20 @@
 package ImageHoster.controller;
 
-import ImageHoster.model.Image;
-import ImageHoster.model.User;
-import ImageHoster.model.UserProfile;
-import ImageHoster.service.ImageService;
-import ImageHoster.service.UserService;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
+import ImageHoster.model.Image;
+import ImageHoster.model.User;
+import ImageHoster.model.UserProfile;
+import ImageHoster.service.ImageService;
+import ImageHoster.service.UserService;
 
 @Controller
 public class UserController {
@@ -43,18 +45,7 @@ public class UserController {
 	// in the database, directs to login page
 	@RequestMapping(value = "users/registration", method = RequestMethod.POST)
 	public String registerUser(User user, Model model) {
-		String userPassword = user.getPassword();
-		// Checks using a RegExp if password has at least 1 letter
-		Boolean hasLetter = userPassword.matches("^.*[a-zA-Z].*$");
-		// Checks using a RegExp if password has at least 1 digit
-		Boolean hasDigit = userPassword.matches("^.*[0-9].*$");
-		// Checks using a RegExp if password has at least 1 special character.
-		// List of special characters used below are from the OWASP standards
-		// Refer: https://owasp.org/www-community/password-special-characters
-		Boolean hasSpecialChar = userPassword.matches(
-				"^.*[\\ \\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~].*$");
-
-		if (hasLetter & hasDigit & hasSpecialChar) {
+		if (user.getPasswordScore() == 3) {
 			userService.registerUser(user);
 			return "users/login";
 		} else {
